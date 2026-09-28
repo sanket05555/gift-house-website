@@ -69,7 +69,7 @@ const Footer = () => {
           <div>
             <h4 className="font-serif text-xl mb-6">Contact</h4>
             <p className="text-cream/70 font-light mb-4">
-              DM us on Instagram to place an order or inquire about custom gifts.
+              Message us on WhatsApp to place an order or inquire about custom gifts.
             </p>
             <button
               onClick={() => handleWhatsAppOrder(null, settings)}

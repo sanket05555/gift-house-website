@@ -50,6 +50,16 @@ const Navbar = () => {
     }
   };
 
+  const handleDesktopSearch = (e) => {
+    e.preventDefault();
+    if (localSearch.trim()) {
+      clearFilters();
+      setSearchQuery(localSearch);
+      setIsShopView(true);
+      navigateToSection('shop');
+    }
+  };
+
   const navLinks = [
     { name: 'Home', href: '#home' },
     { name: 'Shop', href: '#shop' },
@@ -86,15 +96,41 @@ const Navbar = () => {
             </button>
           </div>
 
-          {/* Logo */}
+          {/* Logo & Desktop Search */}
           <div className="flex-shrink-0 flex items-center justify-center flex-1 md:justify-start">
             <a
               href="#home"
               onClick={(e) => handleNavClick(e, 'Home')}
-              className="font-serif text-2xl font-semibold tracking-wide text-wine"
+              className="font-serif text-2xl font-semibold tracking-wide text-wine whitespace-nowrap flex-shrink-0"
             >
               {settings?.businessName || 'Gift House'}
             </a>
+            
+            {/* Desktop Permanent Search */}
+            <div className="hidden md:flex items-center ml-4 lg:ml-8 flex-1 max-w-[280px]">
+              <form
+                onSubmit={handleDesktopSearch}
+                className="w-full flex items-center h-[42px] bg-white border border-wine/20 rounded-[12px] shadow-sm px-1 transition-colors hover:border-wine/30"
+              >
+                <div className="pl-3 h-full flex items-center justify-center text-dark/40 pointer-events-none">
+                  <Search size={16} />
+                </div>
+                <input
+                  type="text"
+                  placeholder="Search gifts, hampers & more"
+                  value={localSearch}
+                  onChange={(e) => setLocalSearch(e.target.value)}
+                  className="w-full pl-2 pr-2 h-full bg-transparent border-0 focus:outline-none text-dark text-[14px] placeholder:text-gray-400 min-w-0"
+                />
+                <button
+                  type="submit"
+                  className="flex-shrink-0 w-[34px] h-[34px] bg-wine text-cream rounded-[10px] flex items-center justify-center hover:bg-wine/90 transition-colors mr-0.5"
+                  aria-label="Search"
+                >
+                  <Search size={16} />
+                </button>
+              </form>
+            </div>
           </div>
 
           {/* Mobile Search Icon */}

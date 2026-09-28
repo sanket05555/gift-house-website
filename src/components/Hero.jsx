@@ -1,13 +1,12 @@
 import React, { useState } from 'react';
 import { motion } from 'framer-motion';
-import { ArrowRight, Search } from 'lucide-react';
+import { ArrowRight } from 'lucide-react';
 import { useShop } from '../context/ShopContext';
 import { useAdmin } from '../context/AdminContext';
 
 const Hero = () => {
-  const { navigateToSection, clearFilters, setSearchQuery, setIsShopView } = useShop();
+  const { navigateToSection, clearFilters } = useShop();
   const { settings } = useAdmin();
-  const [localSearch, setLocalSearch] = useState('');
   const handleExplore = (e) => {
     e.preventDefault();
     clearFilters();
@@ -19,15 +18,7 @@ const Hero = () => {
     navigateToSection('find-gift');
   };
 
-  const handleSearch = (e) => {
-    e.preventDefault();
-    if (localSearch.trim()) {
-      clearFilters();
-      setSearchQuery(localSearch);
-      setIsShopView(true);
-      navigateToSection('shop');
-    }
-  };
+
 
 
   return (
@@ -72,28 +63,7 @@ const Hero = () => {
               </button>
             </div>
 
-            <form
-              onSubmit={handleSearch}
-              className="mt-8 max-w-md mx-auto md:mx-0 relative hidden md:flex items-center h-[52px] bg-white/90 backdrop-blur-sm border border-wine/10 rounded-[12px] shadow-sm overflow-hidden px-1"
-            >
-              <div className="pl-3 h-full flex items-center justify-center text-dark/40 pointer-events-none">
-                <Search size={18} />
-              </div>
-              <input
-                type="text"
-                placeholder="Search gifts, hampers & more"
-                value={localSearch}
-                onChange={(e) => setLocalSearch(e.target.value)}
-                className="w-full pl-3 pr-2 h-full bg-transparent border-0 focus:outline-none text-dark text-[15px] placeholder:text-gray-400"
-              />
-              <button
-                type="submit"
-                className="flex-shrink-0 w-[42px] h-[42px] bg-wine text-cream rounded-[10px] flex items-center justify-center hover:bg-wine/90 transition-colors mr-0.5"
-                aria-label="Search"
-              >
-                <Search size={18} />
-              </button>
-            </form>
+
           </motion.div>
         </div>
       </div>

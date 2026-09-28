@@ -11,18 +11,66 @@ import {
   LogOut,
   ExternalLink,
   Loader2,
-  ShoppingCart
+  ShoppingCart,
+  X
 } from 'lucide-react';
 
 const AdminLayout = () => {
   const location = useLocation();
-  const { user, isAuthLoading, logout, settings } = useAdmin();
+  const { user, isAdmin, isAuthLoading, isAdminLoading, logout, settings } = useAdmin();
   const [isMobileMenuOpen, setIsMobileMenuOpen] = React.useState(false);
+
+  React.useEffect(() => {
+    console.log("[ADMIN] route mounted");
+  }, []);
 
   // Close mobile menu when navigating
   React.useEffect(() => {
     setIsMobileMenuOpen(false);
   }, [location.pathname]);
+
+  if (isAuthLoading) {
+    console.log("[ADMIN] rendering Loading Admin...");
+    return (
+      <div className="flex h-screen items-center justify-center bg-gray-50 flex-col">
+        <Loader2 className="w-8 h-8 text-wine animate-spin mb-4" />
+        <p className="text-gray-600 font-medium">Loading Admin...</p>
+      </div>
+    );
+  }
+
+  if (!user) {
+    console.log("[ADMIN] rendering login (redirect)");
+    return <Navigate to="/admin/login" replace />;
+  }
+
+  if (isAdminLoading) {
+    console.log("[ADMIN] rendering Verifying admin access...");
+    return (
+      <div className="flex h-screen items-center justify-center bg-gray-50 flex-col">
+        <Loader2 className="w-8 h-8 text-wine animate-spin mb-4" />
+        <p className="text-gray-600 font-medium">Verifying admin access...</p>
+      </div>
+    );
+  }
+
+  if (!isAdmin) {
+    console.log("[ADMIN] rendering access denied");
+    return (
+      <div className="flex h-screen items-center justify-center bg-gray-50 flex-col p-4 text-center">
+        <h2 className="text-3xl font-bold text-red-600 mb-4 font-serif">Access Denied</h2>
+        <p className="text-gray-600 mb-8 max-w-md">You do not have administrator privileges to access this area. Please contact the site owner if you believe this is an error.</p>
+        <button 
+          onClick={logout}
+          className="px-8 py-3 bg-wine text-white rounded-lg hover:bg-wine/90 transition-colors shadow-sm font-medium"
+        >
+          Logout & Return to Site
+        </button>
+      </div>
+    );
+  }
+
+  console.log("[ADMIN] rendering dashboard");
 
   const navItems = [
     { name: 'Dashboard', path: '/admin', icon: <LayoutDashboard size={20} /> },
@@ -33,18 +81,6 @@ const AdminLayout = () => {
     { name: 'Testimonials', path: '/admin/testimonials', icon: <MessageSquare size={20} /> },
     { name: 'Settings', path: '/admin/settings', icon: <Settings size={20} /> },
   ];
-
-  if (isAuthLoading) {
-    return (
-      <div className="flex h-screen items-center justify-center bg-gray-50">
-        <Loader2 className="w-8 h-8 text-wine animate-spin" />
-      </div>
-    );
-  }
-
-  if (!user) {
-    return <Navigate to="/admin/login" replace />;
-  }
 
   return (
     <div className="flex h-screen bg-gray-50 font-sans text-gray-900 overflow-hidden">

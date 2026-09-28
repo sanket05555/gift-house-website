@@ -6,18 +6,68 @@ const AdminContext = createContext();
 
 export const AdminProvider = ({ children }) => {
   const [user, setUser] = useState(null);
+  const [isAdmin, setIsAdmin] = useState(false);
   const [isAuthLoading, setIsAuthLoading] = useState(true);
+  const [isAdminLoading, setIsAdminLoading] = useState(false);
 
   useEffect(() => {
+    let mounted = true;
+    const checkAdmin = async (sessionUser) => {
+      if (!sessionUser) {
+        if (mounted) {
+          setUser(null);
+          setIsAdmin(false);
+          setIsAdminLoading(false);
+          setIsAuthLoading(false);
+        }
+        return;
+      }
+      
+      if (mounted) {
+        setUser(sessionUser);
+        setIsAdminLoading(true);
+        setIsAuthLoading(false);
+      }
+      
+      try {
+        console.log("[ADMIN] admin verification started");
+        const { data, error } = await supabase.rpc('is_admin');
+        if (error) {
+          console.error("[ADMIN] is_admin check failed:", error);
+          const testQuery = await supabase.from('orders').select('id').limit(1);
+          if (mounted) {
+            setIsAdmin(!testQuery.error);
+          }
+        } else {
+          console.log("[ADMIN] admin verification result:", data);
+          if (mounted) {
+            setIsAdmin(!!data);
+          }
+        }
+      } catch (err) {
+        console.error("[ADMIN] Admin check exception:", err);
+        if (mounted) {
+          setIsAdmin(false);
+        }
+      } finally {
+        if (mounted) {
+          setIsAdminLoading(false);
+        }
+      }
+    };
+
+    console.log("[ADMIN] auth loading started");
     // Check active session
-    supabase.auth.getSession().then(({ data: { session } }) => {
-      setUser(session?.user ?? null);
-      setIsAuthLoading(false);
+    supabase.auth.getSession().then(({ data: { session }, error }) => {
+      if (error) console.error("[ADMIN] session error:", error);
+      console.log("[ADMIN] auth session result:", session?.user?.id || 'null');
+      checkAdmin(session?.user);
     });
 
     // Listen for auth changes
-    const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
-      setUser(session?.user ?? null);
+    const { data: { subscription } } = supabase.auth.onAuthStateChange((event, session) => {
+      console.log("[ADMIN] auth state change event:", event);
+      checkAdmin(session?.user);
     });
 
     // Fetch public data
@@ -95,7 +145,10 @@ export const AdminProvider = ({ children }) => {
     // Expose it to the context
     setRefreshData(() => fetchPublicData);
 
-    return () => subscription.unsubscribe();
+    return () => {
+      mounted = false;
+      subscription.unsubscribe();
+    };
   }, []);
 
   const logout = async () => {
@@ -145,7 +198,7 @@ export const AdminProvider = ({ children }) => {
 
   return (
     <AdminContext.Provider value={{
-      user, isAuthLoading, logout,
+      user, isAdmin, isAuthLoading, isAdminLoading, logout,
       products, addProduct, updateProduct, deleteProduct,
       categories, addCategory, updateCategory, deleteCategory,
       occasions, addOccasion, updateOccasion, deleteOccasion,

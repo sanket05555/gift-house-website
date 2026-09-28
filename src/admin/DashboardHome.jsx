@@ -118,7 +118,7 @@ const DashboardHome = () => {
     const completedOrders = filteredOrders.filter(o => o.status === 'completed');
     const cancelledOrders = filteredOrders.filter(o => o.status === 'cancelled');
 
-    const uniqueCustomers = new Set(filteredOrders.map(o => o.customer_name?.toLowerCase().trim())).size;
+    const uniqueCustomers = new Set(filteredOrders.map(o => o.customer_name?.toLowerCase()?.trim() || '')).size;
 
     // Charts Data
     const dateMap = {};
