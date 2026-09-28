@@ -7,18 +7,18 @@ import { useAdmin } from '../context/AdminContext';
 
 const InstagramFeed = () => {
   const { settings } = useAdmin();
-  
+
   return (
-    <section className="py-24 bg-white">
+    <section className="py-10 md:py-24 bg-white">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-        <div className="mb-12">
-          <div className="w-12 h-12 bg-cream rounded-full flex items-center justify-center mx-auto mb-4 text-wine border border-wine/10">
-            <Instagram size={24} />
+        <div className="mb-8 md:mb-12">
+          <div className="w-10 h-10 md:w-12 md:h-12 bg-cream rounded-full flex items-center justify-center mx-auto mb-3 md:mb-4 text-wine border border-wine/10">
+            <Instagram className="w-5 h-5 md:w-6 md:h-6" />
           </div>
-          <h2 className="text-3xl md:text-4xl font-serif text-dark mb-4">From {settings.businessName} on Instagram</h2>
-          <a 
-            href={`https://instagram.com/${settings.instagramHandle.replace('@', '')}`} 
-            target="_blank" 
+          <h2 className="text-2xl md:text-4xl font-serif text-dark mb-4">From {settings.businessName} on Instagram</h2>
+          <a
+            href={`https://instagram.com/${settings.instagramHandle.replace('@', '')}`}
+            target="_blank"
             rel="noopener noreferrer"
             className="text-wine font-medium hover:text-wine/80 transition-colors uppercase tracking-wider text-sm border-b border-wine/30 hover:border-wine pb-1"
           >
@@ -26,7 +26,7 @@ const InstagramFeed = () => {
           </a>
         </div>
 
-        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-2 md:gap-4">
+        <div className="grid grid-cols-3 md:grid-cols-3 lg:grid-cols-6 gap-2 md:gap-4">
           {[
             '1572454591674-2739f30d8c40',
             '1584305574647-0685bd87b326',

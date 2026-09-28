@@ -26,9 +26,9 @@ const Footer = () => {
   };
 
   return (
-    <footer className="bg-dark text-cream pt-20 pb-10">
+    <footer className="bg-dark text-cream pt-12 md:pt-20 pb-8 md:pb-10">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12 mb-16">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 md:gap-12 mb-12 md:mb-16">
           <div className="lg:col-span-2">
             <h3 className="font-serif text-3xl font-semibold tracking-wide text-cream mb-4">
               {settings?.businessName || 'Gift House'}
@@ -37,9 +37,9 @@ const Footer = () => {
               {settings?.tagline || 'Thoughtful gifts. Handmade moments.'}
             </p>
             <div className="flex items-center space-x-4">
-              <a 
-                href={`https://instagram.com/${settings.instagramHandle.replace('@', '')}`} 
-                target="_blank" 
+              <a
+                href={`https://instagram.com/${settings.instagramHandle.replace('@', '')}`}
+                target="_blank"
                 rel="noopener noreferrer"
                 className="w-10 h-10 rounded-full border border-cream/20 flex items-center justify-center hover:bg-cream hover:text-dark transition-all duration-300"
               >
@@ -54,8 +54,8 @@ const Footer = () => {
             <ul className="space-y-4">
               {['Shop', 'Occasions', 'Personalized Gifts', 'About', 'Contact'].map((link) => (
                 <li key={link}>
-                  <a 
-                    href={`#${link.toLowerCase().replace(' ', '-')}`} 
+                  <a
+                    href={`#${link.toLowerCase().replace(' ', '-')}`}
                     onClick={(e) => handleFooterLinkClick(e, link)}
                     className="text-cream/70 hover:text-white transition-colors text-sm uppercase tracking-wider"
                   >
@@ -71,7 +71,7 @@ const Footer = () => {
             <p className="text-cream/70 font-light mb-4">
               DM us on Instagram to place an order or inquire about custom gifts.
             </p>
-            <button 
+            <button
               onClick={() => handleWhatsAppOrder(null, settings)}
               className="px-6 py-3 border border-cream/20 hover:border-cream transition-all duration-300 rounded-sm font-medium uppercase tracking-wider text-xs"
             >
@@ -82,9 +82,6 @@ const Footer = () => {
 
         <div className="border-t border-cream/10 pt-8 flex flex-col md:flex-row justify-between items-center text-sm text-cream/50">
           <p>&copy; {currentYear} {settings?.businessName || 'Gift House'}. All rights reserved.</p>
-          <div className="mt-4 md:mt-0 px-4 py-2 bg-cream/5 rounded-sm border border-cream/10 text-xs tracking-wider uppercase">
-            Concept website — created for demonstration
-          </div>
         </div>
       </div>
     </footer>

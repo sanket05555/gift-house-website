@@ -9,12 +9,13 @@ import Testimonials from './components/Testimonials'
 import InstagramFeed from './components/InstagramFeed'
 import FinalCTA from './components/FinalCTA'
 import Footer from './components/Footer'
+import MobileStickyCTA from './components/MobileStickyCTA'
 import { ShopProvider } from './context/ShopContext'
 
 const PublicApp = () => {
   return (
     <ShopProvider>
-      <div className="min-h-screen bg-cream font-sans selection:bg-wine selection:text-cream">
+      <div className="min-h-screen bg-cream font-sans selection:bg-wine selection:text-cream pb-20 md:pb-0">
         <Navbar />
         <main>
           <Hero />
@@ -27,6 +28,7 @@ const PublicApp = () => {
           <FinalCTA />
         </main>
         <Footer />
+        <MobileStickyCTA />
       </div>
     </ShopProvider>
   )

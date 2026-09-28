@@ -5,7 +5,9 @@ const ShopContext = createContext();
 export const ShopProvider = ({ children }) => {
   const [activeCategory, setActiveCategory] = useState('all');
   const [activeOccasion, setActiveOccasion] = useState('all');
+  const [activePriceRange, setActivePriceRange] = useState('all');
   const [searchQuery, setSearchQuery] = useState('');
+  const [isShopView, setIsShopView] = useState(false);
 
   const navigateToSection = (id) => {
     // Basic hash navigation logic + smooth scroll
@@ -24,12 +26,14 @@ export const ShopProvider = ({ children }) => {
       setActiveOccasion(value);
       setActiveCategory('all');
     }
+    setIsShopView(true);
     navigateToSection('shop');
   };
 
   const clearFilters = () => {
     setActiveCategory('all');
     setActiveOccasion('all');
+    setActivePriceRange('all');
     setSearchQuery('');
   };
 
@@ -37,8 +41,12 @@ export const ShopProvider = ({ children }) => {
     <ShopContext.Provider value={{
       activeCategory,
       activeOccasion,
+      activePriceRange,
+      setActivePriceRange,
       searchQuery,
       setSearchQuery,
+      isShopView,
+      setIsShopView,
       applyFilter,
       clearFilters,
       navigateToSection

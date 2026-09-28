@@ -10,7 +10,7 @@ const Testimonials = () => {
   if (visibleTestimonials.length === 0) return null;
 
   return (
-    <section className="py-24 bg-cream overflow-hidden">
+    <section className="py-16 md:py-24 bg-cream overflow-hidden">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="text-center mb-16">
           <span className="text-wine text-sm uppercase tracking-[0.2em] font-medium mb-2 block">Customer Love</span>
@@ -30,7 +30,7 @@ const Testimonials = () => {
             >
               {/* Quote marks */}
               <div className="absolute top-6 right-6 text-6xl font-serif text-cream leading-none select-none">"</div>
-              
+
               <div className="flex text-gold mb-6 relative z-10">
                 {[1, 2, 3, 4, 5].map((star) => (
                   <Star key={star} size={16} fill="currentColor" className={star <= testimonial.rating ? "text-gold fill-gold" : "text-gray-200"} />

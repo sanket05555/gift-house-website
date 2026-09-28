@@ -39,7 +39,7 @@ const FindGift = () => {
     };
     const filterId = mapping[occasion] || 'all';
     applyFilter('occasion', filterId);
-    
+
     // Optional: reset finder after viewing
     setTimeout(() => {
       handleReset();
@@ -47,13 +47,13 @@ const FindGift = () => {
   };
 
   return (
-    <section id="find-gift" className="py-24 bg-white scroll-mt-20">
+    <section id="find-gift" className="py-12 md:py-24 bg-white scroll-mt-20">
       <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="bg-cream rounded-sm p-8 md:p-16 shadow-soft border border-wine/5 relative overflow-hidden">
           {/* Decorative elements */}
           <div className="absolute top-0 right-0 w-64 h-64 bg-rose/5 rounded-full blur-3xl -translate-y-1/2 translate-x-1/3"></div>
           <div className="absolute bottom-0 left-0 w-64 h-64 bg-wine/5 rounded-full blur-3xl translate-y-1/3 -translate-x-1/3"></div>
-          
+
           <div className="relative z-10 text-center mb-10">
             <span className="text-wine text-sm uppercase tracking-[0.2em] font-medium mb-2 block">Gift Finder</span>
             <h2 className="text-3xl md:text-4xl font-serif text-dark">Find the Perfect Gift</h2>
