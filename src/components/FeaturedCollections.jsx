@@ -6,6 +6,7 @@ import { handleWhatsAppOrder, generateWhatsAppUrl } from '../config/business';
 import ImageWithFallback from './ImageWithFallback';
 import { X, Search, SlidersHorizontal } from 'lucide-react';
 import { supabase } from '../lib/supabaseClient';
+import { Link } from 'react-router-dom';
 
 const formatPrice = (price) => {
   const num = typeof price === 'string' ? parseFloat(price.replace(/[^\d.-]/g, '')) : price;
@@ -293,13 +294,22 @@ const FeaturedCollections = () => {
                     <p className="text-wine/70 text-[10px] md:text-xs uppercase tracking-widest mb-1 font-medium truncate">{collection?.label || 'Gift'}</p>
                     <h3 className="text-sm md:text-base font-serif text-dark mb-1 group-hover:text-wine transition-colors line-clamp-2 leading-snug">{product.title}</h3>
                     <p className="text-dark font-medium text-sm md:text-base mb-2 md:mb-3 mt-auto">{formatPrice(product.price)}</p>
-                    <div className="flex gap-2 mt-auto">
+                    <div className="flex flex-col gap-2 mt-auto">
                       <button
                         onClick={(e) => { e.stopPropagation(); handleSelectProduct(product); }}
-                        className="flex-1 bg-wine text-cream py-1.5 md:py-2.5 font-medium text-[10px] md:text-xs uppercase tracking-wider hover:bg-wine/90 transition-colors rounded-sm"
+                        className="w-full bg-wine text-cream py-1.5 md:py-2.5 font-medium text-[10px] md:text-xs uppercase tracking-wider hover:bg-wine/90 transition-colors rounded-sm"
                       >
                         Order Now
                       </button>
+                      {product.slug && (
+                        <Link
+                          to={`/products/${product.slug}`}
+                          onClick={(e) => e.stopPropagation()}
+                          className="w-full text-center py-1.5 md:py-2 font-medium text-[10px] md:text-xs uppercase tracking-wider text-wine border border-wine/20 hover:bg-wine/5 transition-colors rounded-sm"
+                        >
+                          View Details
+                        </Link>
+                      )}
                     </div>
                   </div>
                 </motion.div>

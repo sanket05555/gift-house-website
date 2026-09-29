@@ -16,7 +16,7 @@ const ProductsManager = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [editingId, setEditingId] = useState(null);
   const [formData, setFormData] = useState({
-    title: '', price: '', category_id: '', image_url: '', occasions: [], featured: false, available: true
+    title: '', slug: '', slugManuallyEdited: false, price: '', category_id: '', image_url: '', occasions: [], featured: false, available: true
   });
   const [selectedFile, setSelectedFile] = useState(null);
 
@@ -69,6 +69,8 @@ const ProductsManager = () => {
       setEditingId(product.id);
       setFormData({
         title: product.title || '',
+        slug: product.slug || '',
+        slugManuallyEdited: !!product.slug,
         price: product.price || '',
         category_id: product.category_id || product.collection || '', // fallback to collection if needed
         image_url: product.image_url || '',
@@ -78,7 +80,7 @@ const ProductsManager = () => {
       });
     } else {
       setEditingId(null);
-      setFormData({ title: '', price: '', category_id: '', image_url: '', occasions: [], featured: false, available: true });
+      setFormData({ title: '', slug: '', slugManuallyEdited: false, price: '', category_id: '', image_url: '', occasions: [], featured: false, available: true });
     }
     setSelectedFile(null);
     setIsModalOpen(true);
@@ -88,6 +90,10 @@ const ProductsManager = () => {
     setIsModalOpen(false);
     setEditingId(null);
     setSelectedFile(null);
+  };
+
+  const generateSlug = (title) => {
+    return title.toLowerCase().replace(/[^a-z0-9\s-]/g, '').replace(/\s+/g, '-').replace(/-+/g, '-').replace(/^-+|-+$/g, '');
   };
 
   const handleChange = (e) => {
@@ -101,6 +107,16 @@ const ProductsManager = () => {
       } else {
         setFormData({ ...formData, [name]: checked });
       }
+    } else if (name === 'title') {
+      setFormData(prev => {
+        const newData = { ...prev, title: value };
+        if (!prev.slugManuallyEdited) {
+          newData.slug = generateSlug(value);
+        }
+        return newData;
+      });
+    } else if (name === 'slug') {
+      setFormData({ ...formData, slug: value, slugManuallyEdited: true });
     } else {
       setFormData({ ...formData, [name]: value });
     }
@@ -111,6 +127,14 @@ const ProductsManager = () => {
     setIsSaving(true);
     setError(null);
     try {
+      const formattedSlug = formData.slug.trim().toLowerCase().replace(/\s+/g, '-');
+      if (!formattedSlug) throw new Error("Slug is required");
+
+      const { data: existingProd } = await supabase.from('products').select('id').eq('slug', formattedSlug).single();
+      if (existingProd && existingProd.id !== editingId) {
+        throw new Error("A product with this slug already exists.");
+      }
+
       let finalImageUrl = formData.image_url.trim();
 
       if (selectedFile) {
@@ -133,6 +157,7 @@ const ProductsManager = () => {
 
       const productPayload = {
         title: formData.title,
+        slug: formattedSlug,
         price: formData.price,
         category_id: formData.category_id,
         image_url: finalImageUrl,
@@ -290,12 +315,16 @@ const ProductsManager = () => {
                   <input required type="text" name="title" value={formData.title} onChange={handleChange} className="w-full border border-gray-300 rounded-lg p-2.5 outline-none focus:ring-2 focus:ring-wine/50" />
                 </div>
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">Price *</label>
-                  <input required type="text" name="price" value={formData.price} onChange={handleChange} placeholder="₹999" className="w-full border border-gray-300 rounded-lg p-2.5 outline-none focus:ring-2 focus:ring-wine/50" />
+                  <label className="block text-sm font-medium text-gray-700 mb-1">Slug *</label>
+                  <input required type="text" name="slug" value={formData.slug} onChange={handleChange} className="w-full border border-gray-300 rounded-lg p-2.5 outline-none focus:ring-2 focus:ring-wine/50" />
                 </div>
               </div>
               
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-1">Price *</label>
+                  <input required type="text" name="price" value={formData.price} onChange={handleChange} placeholder="₹999" className="w-full border border-gray-300 rounded-lg p-2.5 outline-none focus:ring-2 focus:ring-wine/50" />
+                </div>
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-1">Category *</label>
                   <select required name="category_id" value={formData.category_id} onChange={handleChange} className="w-full border border-gray-300 rounded-lg p-2.5 outline-none focus:ring-2 focus:ring-wine/50">
@@ -303,17 +332,18 @@ const ProductsManager = () => {
                     {categories.map(c => <option key={c.id} value={c.id}>{c.name}</option>)}
                   </select>
                 </div>
-                <div>
-                  <ImageUpload 
-                    currentImage={formData.image_url} 
-                    fallbackIdentifier={categories.find(c => c.id === formData.category_id)?.name || formData.title}
-                    onImageSelect={(file) => setSelectedFile(file)}
-                    onClear={() => {
-                      setSelectedFile(null);
-                      setFormData({ ...formData, image_url: '' });
-                    }}
-                  />
-                </div>
+              </div>
+
+              <div>
+                <ImageUpload
+                  currentImage={formData.image_url}
+                  fallbackIdentifier={categories.find(c => c.id === formData.category_id)?.name || formData.title}
+                  onImageSelect={(file) => setSelectedFile(file)}
+                  onClear={() => {
+                    setSelectedFile(null);
+                    setFormData({ ...formData, image_url: '' });
+                  }}
+                />
               </div>
 
               <div>

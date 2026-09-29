@@ -1,6 +1,7 @@
 import React from 'react'
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom'
 import PublicApp from './PublicApp'
+import ProductPage from './pages/ProductPage'
 import AdminLayout from './admin/AdminLayout'
 import DashboardHome from './admin/DashboardHome'
 import OrdersManager from './admin/OrdersManager'
@@ -18,6 +19,7 @@ function App() {
       <Router>
         <Routes>
           <Route path="/" element={<PublicApp />} />
+          <Route path="/products/:slug" element={<ProductPage />} />
           <Route path="/admin/login" element={<AdminLogin />} />
           <Route path="/admin" element={<AdminLayout />}>
             <Route index element={<DashboardHome />} />
